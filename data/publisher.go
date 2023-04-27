@@ -1,6 +1,12 @@
 package data
 
-type Publisher struct {
-	Id            uint64 `json:"id" db:"id"`
-	PublisherName string `json:"publisher_name" db:"publisher_name"`
+import (
+	"context"
+
+	"github.com/uchupx/pintro-golang/data/model"
+)
+
+type PublisherRepository interface {
+	FindAll(ctx context.Context) ([]model.Publisher, error)
+	FindByIds(ctx context.Context, ids []uint64) ([]model.Publisher, error)
 }

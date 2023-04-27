@@ -3,6 +3,7 @@ module github.com/uchupx/pintro-golang
 go 1.19
 
 require (
+	github.com/derekstavis/go-qs v0.0.0-20180720192143-9eef69e6c4e7
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/jmoiron/sqlx v1.3.5
