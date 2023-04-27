@@ -25,8 +25,10 @@ type Transport struct {
 	platformRepository      data.PlatformRepository
 	regionRepository        data.RegionRepository
 	gamePublisherRepository data.GamePublisherRepository
+	gamePlatformRepository  data.GamePlatformRepository
 
-	gameResponseGenerator *payload.GameResponseGenerator
+	gameResponseGenerator          *payload.GameResponseGenerator
+	gamePublisherResponseGenerator *payload.GamePublisherResponseGenerator
 }
 
 type CollectionsResponse struct {
@@ -164,6 +166,16 @@ func (t Transport) GetRegionRepo(conf *config.Config) data.RegionRepository {
 	return t.regionRepository
 }
 
+func (t Transport) GetGamePlatformRepo(conf *config.Config) data.GamePlatformRepository {
+	if t.gamePlatformRepository == nil {
+		repo := mysql.NewGamePlatformMysqlRepo(t.GetMySQLConn(conf))
+
+		t.gamePlatformRepository = repo
+	}
+
+	return t.gamePlatformRepository
+}
+
 func (t Transport) GetRegionHandler(conf *config.Config) *RegionHandler {
 	if t.regionHandler == nil {
 		handler := RegionHandler{
@@ -179,15 +191,32 @@ func (t Transport) GetRegionHandler(conf *config.Config) *RegionHandler {
 func (t Transport) GetGameResponseGenerator(conf *config.Config) *payload.GameResponseGenerator {
 	if t.gameResponseGenerator == nil {
 		handler := payload.GameResponseGenerator{
-			GenreRepository:         t.GetGenreRepo(conf),
-			PublisherRepository:     t.GetPublisherRepo(conf),
-			GamePublisherRepository: t.GetGamePublisherRepo(conf),
+			GenreRepository:                t.GetGenreRepo(conf),
+			PublisherRepository:            t.GetPublisherRepo(conf),
+			GamePublisherRepository:        t.GetGamePublisherRepo(conf),
+			PlatformRepository:             t.GetPlatformRepo(conf),
+			GamePlatformRepository:         t.GetGamePlatformRepo(conf),
+			GamePublisherResponseGenerator: *t.GetGamePublisherResponseGenerator(conf),
 		}
 
 		t.gameResponseGenerator = &handler
 	}
 
 	return t.gameResponseGenerator
+}
+
+func (t Transport) GetGamePublisherResponseGenerator(conf *config.Config) *payload.GamePublisherResponseGenerator {
+	if t.gamePublisherResponseGenerator == nil {
+		handler := payload.GamePublisherResponseGenerator{
+			GameRepository:         t.GetGameRepo(conf),
+			PlatformRepository:     t.GetPlatformRepo(conf),
+			GamePlatformRepository: t.GetGamePlatformRepo(conf),
+		}
+
+		t.gamePublisherResponseGenerator = &handler
+	}
+
+	return t.gamePublisherResponseGenerator
 }
 
 // /////////////
