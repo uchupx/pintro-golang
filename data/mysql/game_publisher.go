@@ -2,36 +2,48 @@ package mysql
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/uchupx/pintro-golang/data"
 	"github.com/uchupx/pintro-golang/data/model"
 )
 
-const findGamePublishersByQuery = `
+const findGamePublishersByGameIdsQuery = `
 	SELECT 
 		* 
-	FROM game_publisher
-	LIMIT ?, ?;
+	FROM game_publisher WHERE game_id IN (%s);
+`
+
+const findGamePublishersByPublisherIdsQuery = `
+	SELECT 
+		* 
+	FROM game_publisher WHERE publisher_id IN (%s);
 `
 
 type gamePublisherMySQLRepository struct {
 	db *sqlx.DB
 }
 
-func (m gamePublisherMySQLRepository) FindByQuery(ctx context.Context, query data.GamePublisherQuery) (*data.Collection, error) {
-	var games []model.GamePublisher
+func (m gamePublisherMySQLRepository) FindByGameIds(ctx context.Context, ids []uint64) ([]model.GamePublisher, error) {
+	var items []model.GamePublisher
 	var args []interface{}
 
-	stmt, err := m.db.PrepareContext(ctx, findGamesByQuery)
+	if len(ids) == 0 {
+		return nil, nil
+	}
+
+	placeholder := strings.TrimRight(strings.Repeat("?,", len(ids)), ",")
+	query := fmt.Sprintf(findGamePublishersByGameIdsQuery, placeholder)
+
+	stmt, err := m.db.PrepareContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 
-	limit, offset := ConvertPagination(query.PerPage, query.Page)
-
-	args = append(args, offset)
-	args = append(args, limit)
+	for _, id := range ids {
+		args = append(args, id)
+	}
 
 	rows, err := stmt.QueryContext(ctx, args...)
 	if err != nil {
@@ -39,24 +51,66 @@ func (m gamePublisherMySQLRepository) FindByQuery(ctx context.Context, query dat
 	}
 
 	for rows.Next() {
-		var game model.GamePublisher
+		var item model.GamePublisher
 
 		err = rows.Scan(
-			&game.Id,
-			&game.GameId,
-			&game.PublisherId,
+			&item.Id,
+			&item.GameId,
+			&item.PublisherId,
 		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		games = append(games, game)
+		items = append(items, item)
 	}
 
-	return &data.Collection{
-		Data: games,
-	}, nil
+	return items, nil
+}
+
+func (m gamePublisherMySQLRepository) FindByPublisherIds(ctx context.Context, ids []uint64) ([]model.GamePublisher, error) {
+	var items []model.GamePublisher
+	var args []interface{}
+
+	if len(ids) == 0 {
+		return nil, nil
+	}
+
+	placeholder := strings.TrimRight(strings.Repeat("?,", len(ids)), ",")
+	query := fmt.Sprintf(findGamePublishersByPublisherIdsQuery, placeholder)
+
+	stmt, err := m.db.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, id := range ids {
+		args = append(args, id)
+	}
+
+	rows, err := stmt.QueryContext(ctx, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var item model.GamePublisher
+
+		err = rows.Scan(
+			&item.Id,
+			&item.GameId,
+			&item.PublisherId,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		items = append(items, item)
+	}
+
+	return items, nil
 }
 
 func NewGamePublisherMysqlRepo(db *sqlx.DB) gamePublisherMySQLRepository {

@@ -12,13 +12,15 @@ func main() {
 	gameHandler := trans.GetGameHandler(conf)
 	genreHandler := trans.GetGenreHandler(conf)
 	publisherHandler := trans.GetPublisherHandler(conf)
+	platformHandler := trans.GetPlatformHandler(conf)
+	regionHandler := trans.GetRegionHandler(conf)
 	router := gin.Default()
 
 	router.GET("/games", gameHandler.Get)
 	// router.POST("/games", gameHandler.Get)
 	// router.PUT("/games", gameHandler.Get)
 	// router.DELETE("/games", gameHandler.Get)
-	// router.GET("/games/publisher", gameHandler.Get)
+	router.GET("/games/publisher", gameHandler.Get)
 	// router.GET("/games/platform", gameHandler.Get)
 
 	router.GET("/genres", genreHandler.Get)
@@ -31,12 +33,12 @@ func main() {
 	// router.PUT("/publishers", publisherHandler.Get)
 	// router.DELETE("/publishers", publisherHandler.Get)
 
-	router.GET("/platforms", publisherHandler.Get)
+	router.GET("/platforms", platformHandler.Get)
 	// router.POST("/platforms", publisherHandler.Get)
 	// router.PUT("/platforms", publisherHandler.Get)
 	// router.DELETE("/platforms", publisherHandler.Get)
 
-	router.GET("/regions", publisherHandler.Get)
+	router.GET("/regions", regionHandler.Get)
 	router.GET("/regions/sales", publisherHandler.Get)
 
 	router.Run(":8081")

@@ -16,10 +16,15 @@ type Transport struct {
 	gameHandler      *GameHandler
 	genreHandler     *GenreHandler
 	publisherHandler *PublisherHandler
+	platformHandler  *PlatformHandler
+	regionHandler    *RegionHandler
 
-	gameRepository      data.GameRepository
-	genreRepository     data.GenreRepository
-	publisherRepository data.PublisherRepository
+	gameRepository          data.GameRepository
+	genreRepository         data.GenreRepository
+	publisherRepository     data.PublisherRepository
+	platformRepository      data.PlatformRepository
+	regionRepository        data.RegionRepository
+	gamePublisherRepository data.GamePublisherRepository
 
 	gameResponseGenerator *payload.GameResponseGenerator
 }
@@ -117,10 +122,66 @@ func (t Transport) GetPublisherHandler(conf *config.Config) *PublisherHandler {
 	return t.publisherHandler
 }
 
+func (t Transport) GetPlatformRepo(conf *config.Config) data.PlatformRepository {
+	if t.platformRepository == nil {
+		repo := mysql.NewPlatformMysqlRepo(t.GetMySQLConn(conf))
+
+		t.platformRepository = repo
+	}
+
+	return t.platformRepository
+}
+
+func (t Transport) GetPlatformHandler(conf *config.Config) *PlatformHandler {
+	if t.platformHandler == nil {
+		handler := PlatformHandler{
+			PlatformRepository: t.GetPlatformRepo(conf),
+		}
+
+		t.platformHandler = &handler
+	}
+
+	return t.platformHandler
+}
+
+func (t Transport) GetGamePublisherRepo(conf *config.Config) data.GamePublisherRepository {
+	if t.gamePublisherRepository == nil {
+		repo := mysql.NewGamePublisherMysqlRepo(t.GetMySQLConn(conf))
+
+		t.gamePublisherRepository = repo
+	}
+
+	return t.gamePublisherRepository
+}
+
+func (t Transport) GetRegionRepo(conf *config.Config) data.RegionRepository {
+	if t.regionRepository == nil {
+		repo := mysql.NewRegionMysqlRepo(t.GetMySQLConn(conf))
+
+		t.regionRepository = repo
+	}
+
+	return t.regionRepository
+}
+
+func (t Transport) GetRegionHandler(conf *config.Config) *RegionHandler {
+	if t.regionHandler == nil {
+		handler := RegionHandler{
+			RegionRepository: t.GetRegionRepo(conf),
+		}
+
+		t.regionHandler = &handler
+	}
+
+	return t.regionHandler
+}
+
 func (t Transport) GetGameResponseGenerator(conf *config.Config) *payload.GameResponseGenerator {
 	if t.gameResponseGenerator == nil {
 		handler := payload.GameResponseGenerator{
-			GenreRepository: t.GetGenreRepo(conf),
+			GenreRepository:         t.GetGenreRepo(conf),
+			PublisherRepository:     t.GetPublisherRepo(conf),
+			GamePublisherRepository: t.GetGamePublisherRepo(conf),
 		}
 
 		t.gameResponseGenerator = &handler

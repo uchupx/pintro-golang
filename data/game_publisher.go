@@ -1,6 +1,10 @@
 package data
 
-import "context"
+import (
+	"context"
+
+	"github.com/uchupx/pintro-golang/data/model"
+)
 
 type GamePublisherQuery struct {
 	PerPage uint64
@@ -8,5 +12,6 @@ type GamePublisherQuery struct {
 }
 
 type GamePublisherRepository interface {
-	FindQuery(ctx context.Context, query GamePlatformQuery) (*Collection, error)
+	FindByGameIds(ctx context.Context, ids []uint64) ([]model.GamePublisher, error)
+	FindByPublisherIds(ctx context.Context, ids []uint64) ([]model.GamePublisher, error)
 }

@@ -1,6 +1,13 @@
 package data
 
-type Platform struct {
-	Id           uint64 `json:"id" db:"id"`
-	PlatformName string `json:"platform_name" db:"platform_name"`
+import (
+	"context"
+
+	"github.com/uchupx/pintro-golang/data/model"
+)
+
+type PlatformRepository interface {
+	// FindQuery(ctx context.Context, query GamePlatformQuery) (*Collection, error)
+	FindAll(ctx context.Context) ([]model.Platform, error)
+	FindByIds(ctx context.Context, ids []uint64) ([]model.Platform, error)
 }

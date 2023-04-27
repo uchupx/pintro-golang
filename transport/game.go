@@ -11,8 +11,9 @@ import (
 )
 
 type GameHandler struct {
-	GameRepository        data.GameRepository
-	GameResponseGenerator *payload.GameResponseGenerator
+	GameRepository          data.GameRepository
+	GamePublisherRepository data.GamePublisherRepository
+	GameResponseGenerator   *payload.GameResponseGenerator
 }
 
 func (h GameHandler) Get(c *gin.Context) {
