@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS video_games.user;
 
 CREATE TABLE video_games.user(
 	id int(11) auto_increment primary key,
-    name varchar(255) not null,
+    name varchar(255) not null UNIQUE,
     username varchar(255) not null,
     password text not null
 );
