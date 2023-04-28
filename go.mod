@@ -4,9 +4,11 @@ go 1.19
 
 require (
 	github.com/derekstavis/go-qs v0.0.0-20180720192143-9eef69e6c4e7
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.15.0
 )
 

@@ -7,10 +7,12 @@ import (
 )
 
 type Config struct {
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-	Database string `yaml:"database"`
-	Host     string `yaml:"host"`
+	Username   string `yaml:"username"`
+	Password   string `yaml:"password"`
+	Database   string `yaml:"database"`
+	Host       string `yaml:"host"`
+	PrivateKey string `yaml:"privateKey"`
+	PublicKey  string `yaml:"publicKey"`
 }
 
 func GetConfig() *Config {

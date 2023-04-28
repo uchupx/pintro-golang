@@ -2,6 +2,18 @@ DROP DATABASE IF EXISTS video_games;
 CREATE DATABASE video_games;
 USE video_games;
 
+DROP TABLE IF EXISTS video_games.user;
+
+CREATE TABLE video_games.user(
+	id int(11) auto_increment primary key,
+    name varchar(255) not null,
+    username varchar(255) not null,
+    password text not null
+);
+
+INSERT INTO video_games.user(name, username, password) VALUES("Admin", "admin", 'Rhrynso4Awf0gFiJk0TzzE6Y4RqI74dyRcSuhQyGryw7FjwfPZYRvAGeRfnHb8HI7EBktS2E__7J2-qeieth6AUALNVSeTr2TXcZsJE3JMuU4KT9cMYaM2nZooxRCSTbyoJTixygYGPpScTeQyNwmdDgDWZ4MAS9C4XO-JWGw_jdmqrHSF-OZRckfpCKn_agjWkeiH0Ocx4l5VtEnyMKoIxNc2z-gdWuqBEBZ6HfM2Xx_czSc2LG3oPh4yqgtZHkJ_-or6BdaLaspMpGOhW7FNiBQsf-lAJUReTYkrvFm8ZhEuwfFMChlcdsWRktp_XADLKHCZu7pJAdVlNbBYsfcA==');
+
+
 
 DROP TABLE IF EXISTS video_games.genre;
 

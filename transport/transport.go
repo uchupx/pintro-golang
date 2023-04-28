@@ -7,17 +7,21 @@ import (
 	data "github.com/uchupx/pintro-golang/data"
 	"github.com/uchupx/pintro-golang/data/mysql"
 	database "github.com/uchupx/pintro-golang/database"
+	"github.com/uchupx/pintro-golang/helper/crypt"
 	"github.com/uchupx/pintro-golang/transport/payload"
 )
 
 type Transport struct {
-	mysqlConn *sqlx.DB
+	mysqlConn    *sqlx.DB
+	middleware   *Middleware
+	cryptService crypt.CryptService
 
 	gameHandler      *GameHandler
 	genreHandler     *GenreHandler
 	publisherHandler *PublisherHandler
 	platformHandler  *PlatformHandler
 	regionHandler    *RegionHandler
+	userHandler      *UserHandler
 
 	gameRepository          data.GameRepository
 	genreRepository         data.GenreRepository
@@ -26,9 +30,11 @@ type Transport struct {
 	regionRepository        data.RegionRepository
 	gamePublisherRepository data.GamePublisherRepository
 	gamePlatformRepository  data.GamePlatformRepository
+	userRepoitory           data.UserRepoitory
 
 	gameResponseGenerator          *payload.GameResponseGenerator
 	gamePublisherResponseGenerator *payload.GamePublisherResponseGenerator
+	platfromResponseGenerator      *payload.PlatfromResponseGenerator
 }
 
 type CollectionsResponse struct {
@@ -156,6 +162,16 @@ func (t Transport) GetGamePublisherRepo(conf *config.Config) data.GamePublisherR
 	return t.gamePublisherRepository
 }
 
+func (t Transport) GetUserRepository(conf *config.Config) data.UserRepoitory {
+	if t.userRepoitory == nil {
+		repo := mysql.NewUserMySQlRepo(t.GetMySQLConn(conf))
+
+		t.userRepoitory = repo
+	}
+
+	return t.userRepoitory
+}
+
 func (t Transport) GetRegionRepo(conf *config.Config) data.RegionRepository {
 	if t.regionRepository == nil {
 		repo := mysql.NewRegionMysqlRepo(t.GetMySQLConn(conf))
@@ -208,15 +224,68 @@ func (t Transport) GetGameResponseGenerator(conf *config.Config) *payload.GameRe
 func (t Transport) GetGamePublisherResponseGenerator(conf *config.Config) *payload.GamePublisherResponseGenerator {
 	if t.gamePublisherResponseGenerator == nil {
 		handler := payload.GamePublisherResponseGenerator{
-			GameRepository:         t.GetGameRepo(conf),
-			PlatformRepository:     t.GetPlatformRepo(conf),
-			GamePlatformRepository: t.GetGamePlatformRepo(conf),
+			GameRepository:            t.GetGameRepo(conf),
+			PlatformRepository:        t.GetPlatformRepo(conf),
+			GamePlatformRepository:    t.GetGamePlatformRepo(conf),
+			PublisherRepository:       t.GetPublisherRepo(conf),
+			PlatfromResponseGenerator: *t.GetPlatformResponseGenerator(conf),
 		}
 
 		t.gamePublisherResponseGenerator = &handler
 	}
 
 	return t.gamePublisherResponseGenerator
+}
+
+func (t Transport) GetPlatformResponseGenerator(conf *config.Config) *payload.PlatfromResponseGenerator {
+	if t.platfromResponseGenerator == nil {
+		handler := payload.PlatfromResponseGenerator{
+			// RegionSales:         t.GetGameRepo(conf),
+			PlatformRepository: t.GetPlatformRepo(conf),
+			RegionRepository:   t.GetRegionRepo(conf),
+			// PublisherRepository: t.GetPublisherRepo(conf),
+		}
+		t.platfromResponseGenerator = &handler
+	}
+
+	return t.platfromResponseGenerator
+}
+
+func (t Transport) GetCryptService(conf *config.Config) crypt.CryptService {
+	if t.cryptService == nil {
+		svc := crypt.NewCryptService(crypt.Params{
+			Conf: conf,
+		})
+
+		t.cryptService = svc
+	}
+
+	return t.cryptService
+}
+
+func (t Transport) GetMiddleware(conf *config.Config) *Middleware {
+	if t.middleware == nil {
+		middlware := Middleware{
+			CryptService: t.GetCryptService(conf),
+		}
+
+		t.middleware = &middlware
+	}
+
+	return t.middleware
+}
+
+func (t Transport) GetUserHandler(conf *config.Config) *UserHandler {
+	if t.userHandler == nil {
+		handler := UserHandler{
+			UserRepository: t.GetUserRepository(conf),
+			CryptService:   t.GetCryptService(conf),
+		}
+
+		t.userHandler = &handler
+	}
+
+	return t.userHandler
 }
 
 // /////////////

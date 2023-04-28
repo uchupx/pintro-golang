@@ -2,6 +2,7 @@ package transport
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uchupx/pintro-golang/data"
@@ -22,7 +23,7 @@ func (h GameHandler) Get(c *gin.Context) {
 
 	err := shouldBind(c, &request)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
@@ -69,5 +70,103 @@ func (h GameHandler) Get(c *gin.Context) {
 		Page:    query.Page,
 		Data:    responses,
 	})
+	return
+}
+
+func (h GameHandler) Post(c *gin.Context) {
+	// var responses []payload.ResponseData
+	var request payload.GamePostRequest
+
+	err := c.ShouldBindJSON(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	game := model.Game{
+		GameName: request.Name,
+		GenreId:  request.Genre,
+	}
+
+	_, err = h.GameRepository.Insert(c, game)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, "success")
+	return
+}
+
+func (h GameHandler) Put(c *gin.Context) {
+	var request payload.GamePostRequest
+	err := c.ShouldBindJSON(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	gameIdStr := c.Param("id")
+
+	gameId, err := strconv.Atoi(gameIdStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	games, err := h.GameRepository.FindByIds(c, []uint64{uint64(gameId)})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if len(games) == 0 {
+		c.JSON(http.StatusBadRequest, "game not found")
+		return
+	}
+
+	game := games[0]
+
+	game.GameName = request.Name
+	game.GenreId = request.Genre
+
+	_, err = h.GameRepository.Update(c, game)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, "success")
+	return
+}
+
+func (h GameHandler) Delete(c *gin.Context) {
+	gameIdStr := c.Param("id")
+	gameId, err := strconv.Atoi(gameIdStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	games, err := h.GameRepository.FindByIds(c, []uint64{uint64(gameId)})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if len(games) == 0 {
+		c.JSON(http.StatusBadRequest, "game not found")
+		return
+	}
+
+	game := games[0]
+
+	_, err = h.GameRepository.Delete(c, game)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, "success")
 	return
 }

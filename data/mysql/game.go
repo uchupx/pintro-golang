@@ -21,6 +21,17 @@ const findGamesByIdsQuery = `
 	SELECT * FROM game where id IN (%s)
 `
 
+const deleteGameByIdQuery = `
+	DELETE FROM game WHERE id = ?;
+`
+
+const updateGameByIdQuery = `
+	UPDATE game SET game_name=?, genre_id=? WHERE id=?;
+`
+const insertGameQuery = `
+	INSERT INTO game(game_name,genre_id) VALUES(?,?)
+`
+
 type gameMySQLRepository struct {
 	db *sqlx.DB
 }
@@ -107,6 +118,69 @@ func (m gameMySQLRepository) FindByIds(ctx context.Context, ids []uint64) ([]mod
 	}
 
 	return games, nil
+}
+
+func (m gameMySQLRepository) Delete(ctx context.Context, game model.Game) (*int64, error) {
+	stmt, err := m.db.PrepareContext(ctx, deleteGameByIdQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	stmt.Close()
+
+	row, err := stmt.ExecContext(ctx, game.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	rowsAffected, err := row.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+
+	return &rowsAffected, nil
+}
+
+func (m gameMySQLRepository) Update(ctx context.Context, game model.Game) (*int64, error) {
+	stmt, err := m.db.PrepareContext(ctx, updateGameByIdQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	stmt.Close()
+
+	row, err := stmt.ExecContext(ctx, game.GameName, game.GenreId, game.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	rowsAffected, err := row.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+
+	return &rowsAffected, nil
+}
+
+func (m gameMySQLRepository) Insert(ctx context.Context, game model.Game) (*int64, error) {
+	stmt, err := m.db.PrepareContext(ctx, insertGameQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	row, err := stmt.ExecContext(ctx, game.GameName, game.GenreId)
+	if err != nil {
+		return nil, err
+	}
+
+	rowsAffected, err := row.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+
+	return &rowsAffected, nil
 }
 
 func NewGameMysqlRepo(db *sqlx.DB) gameMySQLRepository {

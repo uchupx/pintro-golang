@@ -14,9 +14,11 @@ type GamePublisherRequest struct {
 }
 
 type GamePublisherResponseGenerator struct {
-	GameRepository         data.GameRepository
-	GamePlatformRepository data.GamePlatformRepository
-	PlatformRepository     data.PlatformRepository
+	GameRepository            data.GameRepository
+	GamePlatformRepository    data.GamePlatformRepository
+	PlatformRepository        data.PlatformRepository
+	PublisherRepository       data.PublisherRepository
+	PlatfromResponseGenerator PlatfromResponseGenerator
 }
 
 func (g GamePublisherResponseGenerator) LoadRelations(ctx context.Context, publisher []ResponseData, mapRelations RelationsType) (GroupedRelations, error) {
@@ -30,12 +32,12 @@ func (g GamePublisherResponseGenerator) LoadRelations(ctx context.Context, publi
 		return nil, nil
 	}
 
-	// relations, err := g.loadGameRelations(ctx, publisher, mapRelations, relations)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	relations, err := g.loadPublisherRelations(ctx, publisher, mapRelations, relations)
+	if err != nil {
+		return nil, err
+	}
 
-	relations, err := g.loadPlatformRelations(ctx, publisher, mapRelations, relations)
+	relations, err = g.loadGamePlatformRelations(ctx, publisher, mapRelations, relations)
 	if err != nil {
 		return nil, err
 	}
@@ -43,76 +45,76 @@ func (g GamePublisherResponseGenerator) LoadRelations(ctx context.Context, publi
 	return relations, nil
 }
 
-// func (g GamePublisherResponseGenerator) loadGameRelations(ctx context.Context, publisher []ResponseData, mapRelations RelationsType, relations GroupedRelations) (GroupedRelations, error) {
-// 	var genreIds []uint64
+func (g GamePublisherResponseGenerator) loadPublisherRelations(ctx context.Context, publishers []ResponseData, mapRelations RelationsType, relations GroupedRelations) (GroupedRelations, error) {
+	var publishersIds []uint64
 
-// 	for _, game := range publisher {
-// 		genreIds = append(genreIds, game.Data.(model.Publisher).GameId)
-// 	}
-
-// 	_, shouldLoadRelations := mapRelations["game"]
-
-// 	if !shouldLoadRelations {
-// 		for _, mapRelation := range mapRelations {
-// 			if mapRelation == "game" {
-// 				shouldLoadRelations = true
-// 			}
-// 		}
-// 	}
-
-// 	if shouldLoadRelations {
-// 		responses := make(map[uint64]ResponseData)
-
-// 		genres, err := g.GameRepository.FindByIds(ctx, genreIds)
-
-// 		if err != nil {
-// 			return nil, err
-// 		}
-
-// 		for _, genre := range genres {
-// 			response := ResponseData{
-// 				Id:     genre.Id,
-// 				Entity: "game",
-// 				Data:   genre,
-// 			}
-
-// 			responses[genre.Id] = response
-// 		}
-
-// 		for _, item := range publisher {
-// 			relations[item.Id]["game"] = map[string][]model.Game{}
-// 		}
-
-// 		for _, item := range publisher {
-// 			if response, ok := responses[item.Data.(model.GamePublisher).GameId]; ok {
-// 				relations[item.Id]["game"] = response
-// 			}
-// 		}
-// 	}
-// 	return relations, nil
-// }
-
-func (g GamePublisherResponseGenerator) loadPlatformRelations(ctx context.Context, publisher []ResponseData, mapRelations RelationsType, relations GroupedRelations) (GroupedRelations, error) {
-	var platformIds []uint64
-	var publisherIds []uint64
-
-	for _, game := range publisher {
-		publisherIds = append(publisherIds, game.Data.(model.Publisher).Id)
+	for _, item := range publishers {
+		publishersIds = append(publishersIds, item.Data.(model.GamePublisher).PublisherId)
 	}
 
-	_, shouldLoadRelations := mapRelations["platform"]
+	_, shouldLoadRelations := mapRelations["publisher"]
 
 	if !shouldLoadRelations {
 		for _, mapRelation := range mapRelations {
-			if mapRelation == "platform" {
+			if mapRelation == "publisher" {
 				shouldLoadRelations = true
 			}
 		}
 	}
 
 	if shouldLoadRelations {
-		responses := make(map[uint64]ResponseData)
-		gamePlatformMap := make(map[uint64]uint64)
+		var responses []ResponseData
+
+		items, err := g.PublisherRepository.FindByIds(ctx, publishersIds)
+
+		if err != nil {
+			return nil, err
+		}
+
+		for _, item := range items {
+			response := ResponseData{
+				Id:     item.Id,
+				Entity: "publisher",
+				Data:   item,
+			}
+
+			responses = append(responses, response)
+		}
+
+		for _, item := range publishers {
+			relations[item.Id]["publisher"] = map[string][]model.Publisher{}
+		}
+
+		for _, item := range publishers {
+			for _, res := range responses {
+				if item.Data.(model.GamePublisher).PublisherId == res.Id {
+					relations[item.Id]["publisher"] = res
+				}
+			}
+		}
+	}
+	return relations, nil
+}
+
+func (g GamePublisherResponseGenerator) loadGamePlatformRelations(ctx context.Context, publisher []ResponseData, mapRelations RelationsType, relations GroupedRelations) (GroupedRelations, error) {
+	var publisherIds []uint64
+
+	for _, game := range publisher {
+		publisherIds = append(publisherIds, game.Data.(model.GamePublisher).Id)
+	}
+
+	reqRelations, shouldLoadRelations := mapRelations["game_platform"]
+
+	if !shouldLoadRelations {
+		for _, mapRelation := range mapRelations {
+			if mapRelation == "game_platform" {
+				shouldLoadRelations = true
+			}
+		}
+	}
+
+	if shouldLoadRelations {
+		var responses []ResponseData
 
 		gamePlatforms, err := g.GamePlatformRepository.FindByPublisherIds(ctx, publisherIds)
 		if err != nil {
@@ -120,32 +122,42 @@ func (g GamePublisherResponseGenerator) loadPlatformRelations(ctx context.Contex
 		}
 
 		for _, item := range gamePlatforms {
-			platformIds = append(platformIds, item.PlatformId)
-			gamePlatformMap[item.GamePublisherId] = item.PlatformId
-		}
-
-		platforms, err := g.PlatformRepository.FindByIds(ctx, platformIds)
-		if err != nil {
-			return nil, err
-		}
-
-		for _, item := range platforms {
 			response := ResponseData{
 				Id:     item.Id,
-				Entity: "platform",
+				Entity: "game_platform",
 				Data:   item,
 			}
 
-			responses[item.Id] = response
+			responses = append(responses, response)
+		}
+
+		if reqRelationsMap, ok := reqRelations.(map[string]interface{}); ok {
+			relations, err := g.PlatfromResponseGenerator.LoadRelations(ctx, responses, reqRelationsMap)
+
+			if err != nil {
+				return nil, err
+			}
+
+			for idx, response := range responses {
+				relation, exists := relations[response.Id]
+
+				if exists {
+					response.Relations = &relation
+				}
+
+				responses[idx] = response
+			}
 		}
 
 		for _, item := range publisher {
-			relations[item.Id]["platform"] = map[string][]model.Platform{"data": nil}
+			relations[item.Id]["game_platform"] = map[string][]model.Platform{"data": nil}
 		}
 
 		for _, item := range publisher {
-			if platformId, ok := gamePlatformMap[item.Data.(model.Publisher).Id]; ok {
-				relations[item.Id]["platform"] = responses[platformId]
+			for _, res := range responses {
+				if item.Id == res.Data.(model.GamePlatform).GamePublisherId {
+					relations[item.Id]["game_platform"] = res
+				}
 			}
 		}
 	}

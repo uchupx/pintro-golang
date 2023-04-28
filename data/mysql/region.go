@@ -16,7 +16,7 @@ const findRegionsByQuery = `
 `
 
 const findRegionByIdsQuery = `
-	SELECT * FROM region where id IN (%s)
+	select region.*, region_sales.game_platform_id, region_sales.num_sales from region join region_sales on region_sales.region_id=region.id where region_sales.game_platform_id IN (%s);
 `
 
 type regionMySQLRepository struct {
@@ -54,8 +54,8 @@ func (m regionMySQLRepository) FindAll(ctx context.Context) ([]model.Region, err
 	return regions, nil
 }
 
-func (m regionMySQLRepository) FindByIds(ctx context.Context, ids []uint64) ([]model.Region, error) {
-	var items []model.Region
+func (m regionMySQLRepository) FindByIds(ctx context.Context, ids []uint64) ([]model.RegionJoinRegionSales, error) {
+	var items []model.RegionJoinRegionSales
 	var args []interface{}
 
 	if len(ids) == 0 {
@@ -80,11 +80,13 @@ func (m regionMySQLRepository) FindByIds(ctx context.Context, ids []uint64) ([]m
 	}
 
 	for rows.Next() {
-		var item model.Region
+		var item model.RegionJoinRegionSales
 
 		err = rows.Scan(
 			&item.Id,
 			&item.RegionName,
+			&item.GamePlatformId,
+			&item.NumSales,
 		)
 
 		if err != nil {
