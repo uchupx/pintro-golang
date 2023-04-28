@@ -1,0 +1,533 @@
+{
+	"info": {
+		"_postman_id": "164323a0-7dcf-4d66-9e15-e21dafa25f40",
+		"name": "Pintro GOLANG",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Games",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/games?relations[game_publisher][0]=publisher&relations[game_publisher][game_platform][0]=sales&page=1&per_page=10&relations[0]=genre",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"games"
+					],
+					"query": [
+						{
+							"key": "relations[game_publisher][0]",
+							"value": "publisher"
+						},
+						{
+							"key": "relations[game_publisher][game_platform][0]",
+							"value": "sales"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per_page",
+							"value": "10"
+						},
+						{
+							"key": "relations[0]",
+							"value": "genre"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SIGN IN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/users/sign-in",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"users",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SIGN UP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Admin\",\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Genres",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-GB,en;q=0.6"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNjJkOGE2OWVlMTE0OTA1NTE3MzVhZDdiZTc3ZjlmODIzZDQyOWUwOTI4ZDkyYzdmMWY1ZmY5M2VhOGRkOTY3MmMwNWYwNzA2ZjQwNmRkIn0.eyJhdWQiOiIyIiwianRpIjoiODM2MmQ4YTY5ZWUxMTQ5MDU1MTczNWFkN2JlNzdmOWY4MjNkNDI5ZTA5MjhkOTJjN2YxZjVmZjkzZWE4ZGQ5NjcyYzA1ZjA3MDZmNDA2ZGQiLCJpYXQiOjE2Nzg5NjYzMDIsIm5iZiI6MTY3ODk2NjMwMiwiZXhwIjoxNjgwMjYyMzAyLCJzdWIiOiIyNzgiLCJzY29wZXMiOltdfQ.CW4gL7vuy6cfufUo3EBUErpeDpXkcHbVR0HrvBWKAEWhYAUxf2o6SP2UgcryX_DmhrRoMqP7mWhKT-W3FvBBbzqGE5uwbe9mlwzQsuUHcJ1CeSUZWhQeBiYBeRAznP4v08cafAuxXJtcbU35l_T8W40FmcrnrZVAxzbzZ4U2MroqL-IhbKEHynsXmbMmi40852pOnH6PoxhIF8-rRyZY8zS8CQaqwVOlVmlPnxQHajmQaDg8PrVnl-r8Ek8j0LWQG4f-uwi6s4eFxrX0Le-6JVNb9bufpNI2CbJUTO2xlptq2BBf1nkQnYkQz8D6KA42nZATlhoq2kiLqk_EKTe1xOZgabv9xx1yb7PVDLLO-wt2mUOd1B-nSgxgw9246ukMoJP-xqoH4eKnaHTl9pf-cy_H6wucjDEgVB5p1iIu2DYnWB_giPBmb1qT4ewCsL4r3MpWCLPZgSJjuUqG53Rg5-LjMluG_BbEf22QTYnRuqS0SZ7cekYPeBeZJYK8hAwecL4loiK29JQ02N5IkoMBAtUue13b5-DqulAp7L_FgObEdRwxoVwZ4NBdTMyHJjr5aO7IdY55ayoZlr693ARwdfWvFTm6NI826YvAXe2pdTCSqVtZPMIchy9Cx7OEcZX8xPIDtGon36PDOqCYEMum74MJurf7i08yHAuucCoofBY"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Origin",
+						"value": "http://tms.flynd.local"
+					},
+					{
+						"key": "Referer",
+						"value": "http://tms.flynd.local/"
+					},
+					{
+						"key": "Referrer-Policy",
+						"value": "no-referrer-when-downgrade"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "cross-site"
+					},
+					{
+						"key": "Sec-GPC",
+						"value": "1"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Regions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-GB,en;q=0.6"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNjJkOGE2OWVlMTE0OTA1NTE3MzVhZDdiZTc3ZjlmODIzZDQyOWUwOTI4ZDkyYzdmMWY1ZmY5M2VhOGRkOTY3MmMwNWYwNzA2ZjQwNmRkIn0.eyJhdWQiOiIyIiwianRpIjoiODM2MmQ4YTY5ZWUxMTQ5MDU1MTczNWFkN2JlNzdmOWY4MjNkNDI5ZTA5MjhkOTJjN2YxZjVmZjkzZWE4ZGQ5NjcyYzA1ZjA3MDZmNDA2ZGQiLCJpYXQiOjE2Nzg5NjYzMDIsIm5iZiI6MTY3ODk2NjMwMiwiZXhwIjoxNjgwMjYyMzAyLCJzdWIiOiIyNzgiLCJzY29wZXMiOltdfQ.CW4gL7vuy6cfufUo3EBUErpeDpXkcHbVR0HrvBWKAEWhYAUxf2o6SP2UgcryX_DmhrRoMqP7mWhKT-W3FvBBbzqGE5uwbe9mlwzQsuUHcJ1CeSUZWhQeBiYBeRAznP4v08cafAuxXJtcbU35l_T8W40FmcrnrZVAxzbzZ4U2MroqL-IhbKEHynsXmbMmi40852pOnH6PoxhIF8-rRyZY8zS8CQaqwVOlVmlPnxQHajmQaDg8PrVnl-r8Ek8j0LWQG4f-uwi6s4eFxrX0Le-6JVNb9bufpNI2CbJUTO2xlptq2BBf1nkQnYkQz8D6KA42nZATlhoq2kiLqk_EKTe1xOZgabv9xx1yb7PVDLLO-wt2mUOd1B-nSgxgw9246ukMoJP-xqoH4eKnaHTl9pf-cy_H6wucjDEgVB5p1iIu2DYnWB_giPBmb1qT4ewCsL4r3MpWCLPZgSJjuUqG53Rg5-LjMluG_BbEf22QTYnRuqS0SZ7cekYPeBeZJYK8hAwecL4loiK29JQ02N5IkoMBAtUue13b5-DqulAp7L_FgObEdRwxoVwZ4NBdTMyHJjr5aO7IdY55ayoZlr693ARwdfWvFTm6NI826YvAXe2pdTCSqVtZPMIchy9Cx7OEcZX8xPIDtGon36PDOqCYEMum74MJurf7i08yHAuucCoofBY"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Origin",
+						"value": "http://tms.flynd.local"
+					},
+					{
+						"key": "Referer",
+						"value": "http://tms.flynd.local/"
+					},
+					{
+						"key": "Referrer-Policy",
+						"value": "no-referrer-when-downgrade"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "cross-site"
+					},
+					{
+						"key": "Sec-GPC",
+						"value": "1"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/regions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"regions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publisher",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-GB,en;q=0.6"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNjJkOGE2OWVlMTE0OTA1NTE3MzVhZDdiZTc3ZjlmODIzZDQyOWUwOTI4ZDkyYzdmMWY1ZmY5M2VhOGRkOTY3MmMwNWYwNzA2ZjQwNmRkIn0.eyJhdWQiOiIyIiwianRpIjoiODM2MmQ4YTY5ZWUxMTQ5MDU1MTczNWFkN2JlNzdmOWY4MjNkNDI5ZTA5MjhkOTJjN2YxZjVmZjkzZWE4ZGQ5NjcyYzA1ZjA3MDZmNDA2ZGQiLCJpYXQiOjE2Nzg5NjYzMDIsIm5iZiI6MTY3ODk2NjMwMiwiZXhwIjoxNjgwMjYyMzAyLCJzdWIiOiIyNzgiLCJzY29wZXMiOltdfQ.CW4gL7vuy6cfufUo3EBUErpeDpXkcHbVR0HrvBWKAEWhYAUxf2o6SP2UgcryX_DmhrRoMqP7mWhKT-W3FvBBbzqGE5uwbe9mlwzQsuUHcJ1CeSUZWhQeBiYBeRAznP4v08cafAuxXJtcbU35l_T8W40FmcrnrZVAxzbzZ4U2MroqL-IhbKEHynsXmbMmi40852pOnH6PoxhIF8-rRyZY8zS8CQaqwVOlVmlPnxQHajmQaDg8PrVnl-r8Ek8j0LWQG4f-uwi6s4eFxrX0Le-6JVNb9bufpNI2CbJUTO2xlptq2BBf1nkQnYkQz8D6KA42nZATlhoq2kiLqk_EKTe1xOZgabv9xx1yb7PVDLLO-wt2mUOd1B-nSgxgw9246ukMoJP-xqoH4eKnaHTl9pf-cy_H6wucjDEgVB5p1iIu2DYnWB_giPBmb1qT4ewCsL4r3MpWCLPZgSJjuUqG53Rg5-LjMluG_BbEf22QTYnRuqS0SZ7cekYPeBeZJYK8hAwecL4loiK29JQ02N5IkoMBAtUue13b5-DqulAp7L_FgObEdRwxoVwZ4NBdTMyHJjr5aO7IdY55ayoZlr693ARwdfWvFTm6NI826YvAXe2pdTCSqVtZPMIchy9Cx7OEcZX8xPIDtGon36PDOqCYEMum74MJurf7i08yHAuucCoofBY"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Origin",
+						"value": "http://tms.flynd.local"
+					},
+					{
+						"key": "Referer",
+						"value": "http://tms.flynd.local/"
+					},
+					{
+						"key": "Referrer-Policy",
+						"value": "no-referrer-when-downgrade"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "cross-site"
+					},
+					{
+						"key": "Sec-GPC",
+						"value": "1"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/publishers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"publishers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Platforms",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-GB,en;q=0.6"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNjJkOGE2OWVlMTE0OTA1NTE3MzVhZDdiZTc3ZjlmODIzZDQyOWUwOTI4ZDkyYzdmMWY1ZmY5M2VhOGRkOTY3MmMwNWYwNzA2ZjQwNmRkIn0.eyJhdWQiOiIyIiwianRpIjoiODM2MmQ4YTY5ZWUxMTQ5MDU1MTczNWFkN2JlNzdmOWY4MjNkNDI5ZTA5MjhkOTJjN2YxZjVmZjkzZWE4ZGQ5NjcyYzA1ZjA3MDZmNDA2ZGQiLCJpYXQiOjE2Nzg5NjYzMDIsIm5iZiI6MTY3ODk2NjMwMiwiZXhwIjoxNjgwMjYyMzAyLCJzdWIiOiIyNzgiLCJzY29wZXMiOltdfQ.CW4gL7vuy6cfufUo3EBUErpeDpXkcHbVR0HrvBWKAEWhYAUxf2o6SP2UgcryX_DmhrRoMqP7mWhKT-W3FvBBbzqGE5uwbe9mlwzQsuUHcJ1CeSUZWhQeBiYBeRAznP4v08cafAuxXJtcbU35l_T8W40FmcrnrZVAxzbzZ4U2MroqL-IhbKEHynsXmbMmi40852pOnH6PoxhIF8-rRyZY8zS8CQaqwVOlVmlPnxQHajmQaDg8PrVnl-r8Ek8j0LWQG4f-uwi6s4eFxrX0Le-6JVNb9bufpNI2CbJUTO2xlptq2BBf1nkQnYkQz8D6KA42nZATlhoq2kiLqk_EKTe1xOZgabv9xx1yb7PVDLLO-wt2mUOd1B-nSgxgw9246ukMoJP-xqoH4eKnaHTl9pf-cy_H6wucjDEgVB5p1iIu2DYnWB_giPBmb1qT4ewCsL4r3MpWCLPZgSJjuUqG53Rg5-LjMluG_BbEf22QTYnRuqS0SZ7cekYPeBeZJYK8hAwecL4loiK29JQ02N5IkoMBAtUue13b5-DqulAp7L_FgObEdRwxoVwZ4NBdTMyHJjr5aO7IdY55ayoZlr693ARwdfWvFTm6NI826YvAXe2pdTCSqVtZPMIchy9Cx7OEcZX8xPIDtGon36PDOqCYEMum74MJurf7i08yHAuucCoofBY"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Origin",
+						"value": "http://tms.flynd.local"
+					},
+					{
+						"key": "Referer",
+						"value": "http://tms.flynd.local/"
+					},
+					{
+						"key": "Referrer-Policy",
+						"value": "no-referrer-when-downgrade"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "cross-site"
+					},
+					{
+						"key": "Sec-GPC",
+						"value": "1"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/platforms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"platforms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE GAMES",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test 2\",\n    \"genre\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/games",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE GAMES",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXQiOiJ7XCJpZFwiOjEsXCJuYW1lXCI6XCJBZG1pblwiLFwidXNlcm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwiUmhyeW5zbzRBd2YwZ0ZpSmswVHp6RTZZNFJxSTc0ZHlSY1N1aFF5R3J5dzdGandmUFpZUnZBR2VSZm5IYjhISTdFQmt0UzJFX183SjItcWVpZXRoNkFVQUxOVlNlVHIyVFhjWnNKRTNKTXVVNEtUOWNNWWFNMm5ab294UkNTVGJ5b0pUaXh5Z1lHUHBTY1RlUXlOd21kRGdEV1o0TUFTOUM0WE8tSldHd19qZG1xckhTRi1PWlJja2ZwQ0tuX2FnaldrZWlIME9jeDRsNVZ0RW55TUtvSXhOYzJ6LWdkV3VxQkVCWjZIZk0yWHhfY3pTYzJMRzNvUGg0eXFndFpIa0pfLW9yNkJkYUxhc3BNcEdPaFc3Rk5pQlFzZi1sQUpVUmVUWWtydkZtOFpoRXV3ZkZNQ2hsY2RzV1JrdHBfWEFETEtIQ1p1N3BKQWRWbE5iQllzZmNBPT1cIn0iLCJleHAiOjE2ODI2ODM2NTd9.Rnk3HpS1MOdI1GUSivc8zOuGJsKldm47FTOL6RUMJb1SAX-QrgVG-WfaHW7fejmeJDPBRbE3IkJNwRgfyFnZO_SG03ld_l4hOhYYG3mUI5RD2T8U-BZdBgfqBCoEtm0Q4Q9hZuH9jmWmt7lvq8P8Z6JygUGZTLJP5q3FqFI02cez11MMmgFy6XHpcfG6LniY5-ybOIbA0FDq4a0N5FvM50GTpjoPW6WJ8J8DB4zWuPVaiQ577X4zyWZ3jkPum925GLydcbq0RTKF9NNrl_BYlfCciMrsTovucwZ6CtA4WesgXEG5ky6h0cOYkZxq_5IcRQN8oKuFNrl3ZtQpeDkonQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test 3\",\n    \"genre\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/games/11365",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"games",
+						"11365"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE GAMES",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXQiOiJ7XCJpZFwiOjEsXCJuYW1lXCI6XCJBZG1pblwiLFwidXNlcm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwiUmhyeW5zbzRBd2YwZ0ZpSmswVHp6RTZZNFJxSTc0ZHlSY1N1aFF5R3J5dzdGandmUFpZUnZBR2VSZm5IYjhISTdFQmt0UzJFX183SjItcWVpZXRoNkFVQUxOVlNlVHIyVFhjWnNKRTNKTXVVNEtUOWNNWWFNMm5ab294UkNTVGJ5b0pUaXh5Z1lHUHBTY1RlUXlOd21kRGdEV1o0TUFTOUM0WE8tSldHd19qZG1xckhTRi1PWlJja2ZwQ0tuX2FnaldrZWlIME9jeDRsNVZ0RW55TUtvSXhOYzJ6LWdkV3VxQkVCWjZIZk0yWHhfY3pTYzJMRzNvUGg0eXFndFpIa0pfLW9yNkJkYUxhc3BNcEdPaFc3Rk5pQlFzZi1sQUpVUmVUWWtydkZtOFpoRXV3ZkZNQ2hsY2RzV1JrdHBfWEFETEtIQ1p1N3BKQWRWbE5iQllzZmNBPT1cIn0iLCJleHAiOjE2ODI2ODM2NTd9.Rnk3HpS1MOdI1GUSivc8zOuGJsKldm47FTOL6RUMJb1SAX-QrgVG-WfaHW7fejmeJDPBRbE3IkJNwRgfyFnZO_SG03ld_l4hOhYYG3mUI5RD2T8U-BZdBgfqBCoEtm0Q4Q9hZuH9jmWmt7lvq8P8Z6JygUGZTLJP5q3FqFI02cez11MMmgFy6XHpcfG6LniY5-ybOIbA0FDq4a0N5FvM50GTpjoPW6WJ8J8DB4zWuPVaiQ577X4zyWZ3jkPum925GLydcbq0RTKF9NNrl_BYlfCciMrsTovucwZ6CtA4WesgXEG5ky6h0cOYkZxq_5IcRQN8oKuFNrl3ZtQpeDkonQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test 3\",\n    \"genre\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/games/11365",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"games",
+						"11365"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

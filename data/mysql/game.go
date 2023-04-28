@@ -85,7 +85,7 @@ func (m gameMySQLRepository) FindByIds(ctx context.Context, ids []uint64) ([]mod
 	}
 
 	placeholder := strings.TrimRight(strings.Repeat("?,", len(ids)), ",")
-	query := fmt.Sprintf(findPublisherByIdsQuery, placeholder)
+	query := fmt.Sprintf(findGamesByIdsQuery, placeholder)
 
 	stmt, err := m.db.PrepareContext(ctx, query)
 	if err != nil {
@@ -126,7 +126,7 @@ func (m gameMySQLRepository) Delete(ctx context.Context, game model.Game) (*int6
 		return nil, err
 	}
 
-	stmt.Close()
+	defer stmt.Close()
 
 	row, err := stmt.ExecContext(ctx, game.Id)
 	if err != nil {
@@ -147,7 +147,7 @@ func (m gameMySQLRepository) Update(ctx context.Context, game model.Game) (*int6
 		return nil, err
 	}
 
-	stmt.Close()
+	defer stmt.Close()
 
 	row, err := stmt.ExecContext(ctx, game.GameName, game.GenreId, game.Id)
 	if err != nil {
